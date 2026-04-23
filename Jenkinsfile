@@ -87,7 +87,7 @@ pipeline {
                 echo "Vérification du déploiement..."
                 sh """
                     sleep 10
-                    RESPONSE=\$(curl -sf http://localhost:30080/api/v1/health)
+                    RESPONSE=\$(curl -sf http://84.46.240.125:30080/api/v1/health)
                     echo "Réponse : \$RESPONSE"
                     echo \$RESPONSE | grep -q '"status":"ok"'
                     echo "Smoke test OK !"
