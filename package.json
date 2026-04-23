@@ -1,0 +1,36 @@
+{
+  "name": "api-devops-demo",
+  "version": "1.0.0",
+  "description": "API REST professionnelle - Portfolio DevOps",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest --coverage",
+    "lint": "eslint src/**/*.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "winston": "^3.11.0",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "express-rate-limit": "^7.1.5",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "eslint": "^8.57.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+        "lines": 70,
+        "functions": 70
+      }
+    }
+  }
+}
