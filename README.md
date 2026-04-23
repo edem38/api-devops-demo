@@ -50,14 +50,23 @@ flowchart LR
 
 ## 🔌 Endpoints
 
-| Méthode | Route | Description | Auth |
-|---|---|---|---|
-| GET | `/api/v1/health` | Health check Kubernetes | ❌ |
-| GET | `/api/v1/health/ready` | Readiness probe | ❌ |
-| POST | `/api/v1/auth/register` | Créer un compte | ❌ |
-| POST | `/api/v1/auth/login` | Login → JWT token | ❌ |
-| GET | `/api/v1/users` | Liste utilisateurs | ✅ JWT |
-| GET | `/api/v1/users/:id` | Un utilisateur | ✅ JWT |
+### 🔓 Routes publiques — aucun token requis
+
+| Méthode | Route | Description |
+|---|---|---|
+| `GET` | `/api/v1/health` | Health check Kubernetes |
+| `GET` | `/api/v1/health/ready` | Readiness probe |
+| `POST` | `/api/v1/auth/register` | Créer un compte |
+| `POST` | `/api/v1/auth/login` | Login → retourne un JWT token |
+
+### 🔒 Routes protégées — JWT token obligatoire
+
+| Méthode | Route | Description |
+|---|---|---|
+| `GET` | `/api/v1/users` | Liste tous les utilisateurs |
+| `GET` | `/api/v1/users/:id` | Récupère un utilisateur par ID |
+
+> 💡 Pour accéder aux routes protégées, ajoute le header : `Authorization: Bearer <token>`
 
 ## 🚀 Lancer en local
 
