@@ -1,26 +1,52 @@
 # API DevOps Demo
 
-[![Build Status](http://84.46.240.125:8080/buildStatus/icon?job=api-devops-demo)](http://84.46.240.125:8080/job/api-devops-demo/)
-[![Node.js](https://img.shields.io/badge/Node.js-20-green)](https://nodejs.org)
-[![Docker](https://img.shields.io/badge/Docker-ready-blue)](https://docker.com)
-[![Kubernetes](https://img.shields.io/badge/Kubernetes-K3s-blue)](https://k3s.io)
+![Node.js](https://img.shields.io/badge/Node.js-20-339933?logo=nodedotjs&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-K3s-326CE5?logo=kubernetes&logoColor=white)
+![Jest](https://img.shields.io/badge/Tests-11%20passing-C21325?logo=jest&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4.x-000000?logo=express&logoColor=white)
+![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
 
-## Stack technique
+> API REST professionnelle déployée automatiquement via un pipeline CI/CD Jenkins sur Kubernetes.
 
-| Composant | Technologie |
-|---|---|
-| API REST | Node.js + Express + JWT |
-| Tests | Jest (11 tests, 84% coverage) |
-| CI/CD | Jenkins Pipeline |
-| Containerisation | Docker multi-stage |
-| Orchestration | Kubernetes K3s |
-| Registry | GitHub Container Registry (ghcr.io) |
+## 🏗️ Architecture
 
-## Pipeline CI/CD 
+```mermaid
+flowchart LR
+    Dev(👨‍💻 Développeur) -->|git push| GH(GitHub)
+    GH -->|webhook| JK(Jenkins)
+    JK -->|npm ci| IN(Install)
+    IN -->|eslint| LN(Lint)
+    LN -->|jest| TS(Tests)
+    TS -->|docker build| DB(Docker Build)
+    DB -->|docker push| GR(ghcr.io)
+    GR -->|kubectl apply| K8S(Kubernetes K3s)
+    K8S -->|2 replicas| AP(🚀 API Live)
 
-Git Push → Checkout → Install → Lint → Tests → Docker Build → Push ghcr.io → Deploy K8s → Smoke Test
+    style Dev fill:#4A90D9,color:#fff
+    style GH fill:#24292e,color:#fff
+    style JK fill:#D33833,color:#fff
+    style TS fill:#C21325,color:#fff
+    style DB fill:#2496ED,color:#fff
+    style GR fill:#24292e,color:#fff
+    style K8S fill:#326CE5,color:#fff
+    style AP fill:#27AE60,color:#fff
+```
 
-## Endpoints
+## 🛠️ Stack technique
+
+| Composant | Technologie | Rôle |
+|---|---|---|
+| API REST | Node.js 20 + Express | Serveur HTTP |
+| Authentification | JWT + bcrypt | Sécurité |
+| Tests | Jest + Supertest | 11 tests, 84% coverage |
+| CI/CD | Jenkins Pipeline | Automatisation |
+| Containerisation | Docker multi-stage | Packaging |
+| Orchestration | Kubernetes K3s | Déploiement |
+| Registry | GitHub Container Registry | Stockage images |
+| Logs | Winston (JSON structuré) | Observabilité |
+
+## 🔌 Endpoints
 
 | Méthode | Route | Description | Auth |
 |---|---|---|---|
@@ -31,7 +57,7 @@ Git Push → Checkout → Install → Lint → Tests → Docker Build → Push g
 | GET | `/api/v1/users` | Liste utilisateurs | ✅ JWT |
 | GET | `/api/v1/users/:id` | Un utilisateur | ✅ JWT |
 
-## Lancer en local
+## 🚀 Lancer en local
 
 ```bash
 # Installer les dépendances
@@ -44,16 +70,14 @@ npm test
 npm start
 ```
 
-## Architecture
-
-┌─────────┐    push     ┌─────────┐    build    ┌─────────┐
-│ GitHub  │ ──────────► │ Jenkins │ ──────────► │  Docker │
-└─────────┘             └─────────┘             └─────────┘
-│ push
-▼
-┌─────────────┐  deploy  ┌─────────────┐       ┌─────────┐
-│ Kubernetes  │ ◄─────── │   Jenkins   │       │ ghcr.io │
-│   (K3s)     │          └─────────────┘       └─────────┘
-└─────────────┘
-
-# Webhook test Thu Apr 23 13:43:58 CEST 2026
+## 🔄 Pipeline Jenkins
+git push
+│
+├── 📥 Checkout       → Récupération du code
+├── 📦 Install        → npm ci
+├── 🔍 Lint           → ESLint
+├── 🧪 Tests          → Jest (11 tests, 84% coverage)
+├── 🐳 Docker Build   → Image multi-stage
+├── 📤 Docker Push    → ghcr.io/edem38/api-devops-demo
+├── ☸️  Deploy K8s    → Rolling update (2 replicas)
+└── ✅ Smoke Test     → Vérification endpoint /health
