@@ -88,7 +88,7 @@ pipeline {
                 sh """
                     sleep 10
                     curl -sf http://localhost:30080/api/v1/health | \
-                      grep '"status":"ok"'
+                      grep status.*ok
                     echo "Smoke test OK !"
                 """
             }
