@@ -1,5 +1,7 @@
 # API DevOps Demo
 
+![CI/CD](https://img.shields.io/badge/CI%2FCD-passing-27AE60?logo=jenkins&logoColor=white)
+
 ![Node.js](https://img.shields.io/badge/Node.js-20-339933?logo=nodedotjs&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-K3s-326CE5?logo=kubernetes&logoColor=white)
