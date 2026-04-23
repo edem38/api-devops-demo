@@ -70,14 +70,32 @@ npm test
 npm start
 ```
 
+
 ## 🔄 Pipeline Jenkins
-git push
-│
-├── 📥 Checkout       → Récupération du code
-├── 📦 Install        → npm ci
-├── 🔍 Lint           → ESLint
-├── 🧪 Tests          → Jest (11 tests, 84% coverage)
-├── 🐳 Docker Build   → Image multi-stage
-├── 📤 Docker Push    → ghcr.io/edem38/api-devops-demo
-├── ☸️  Deploy K8s    → Rolling update (2 replicas)
-└── ✅ Smoke Test     → Vérification endpoint /health
+
+```mermaid
+flowchart TD
+    A[📥 Checkout\nRécupération GitHub] --> B[📦 Install\nnpm ci]
+    B --> C[🔍 Lint\nESLint]
+    C --> D[🧪 Tests\nJest - 11 tests - 84% coverage]
+    D --> E{Tests OK ?}
+    E -->|❌ Échec| F[🚨 Pipeline stoppé\nNotification erreur]
+    E -->|✅ Succès| G[🐳 Docker Build\nImage multi-stage]
+    G --> H[📤 Docker Push\nghcr.io/edem38/api-devops-demo]
+    H --> I[☸️ Deploy K8s\nRolling update 2 replicas]
+    I --> J[🔎 Smoke Test\nVérification /health]
+    J --> K{Smoke OK ?}
+    K -->|❌ Échec| L[⏪ Rollback automatique]
+    K -->|✅ Succès| M[🚀 Production live !]
+
+    style A fill:#4A90D9,color:#fff
+    style D fill:#C21325,color:#fff
+    style E fill:#F39C12,color:#fff
+    style F fill:#E74C3C,color:#fff
+    style G fill:#2496ED,color:#fff
+    style H fill:#24292e,color:#fff
+    style I fill:#326CE5,color:#fff
+    style K fill:#F39C12,color:#fff
+    style L fill:#E74C3C,color:#fff
+    style M fill:#27AE60,color:#fff
+```
