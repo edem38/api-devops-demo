@@ -59,7 +59,7 @@ pipeline {
             steps {
                 echo "Push vers GitHub Container Registry..."
                 sh """
-                    echo ${GITHUB_TOKEN} | \
+                    echo \$GITHUB_TOKEN | \
                       docker login ghcr.io -u edem38 --password-stdin
                     docker push ${IMAGE_NAME}:${IMAGE_TAG}
                     docker push ${IMAGE_NAME}:latest
@@ -71,11 +71,11 @@ pipeline {
             steps {
                 echo "Déploiement sur Kubernetes..."
                 sh """
-                    kubectl --kubeconfig=${KUBECONFIG} apply -f k8s/
-                    kubectl --kubeconfig=${KUBECONFIG} set image \
+                    kubectl --kubeconfig=\$KUBECONFIG apply -f k8s/
+                    kubectl --kubeconfig=\$KUBECONFIG set image \
                       deployment/api-devops-demo \
                       api-devops-demo=${IMAGE_NAME}:${IMAGE_TAG}
-                    kubectl --kubeconfig=${KUBECONFIG} rollout status \
+                    kubectl --kubeconfig=\$KUBECONFIG rollout status \
                       deployment/api-devops-demo \
                       --timeout=120s
                 """
@@ -87,8 +87,9 @@ pipeline {
                 echo "Vérification du déploiement..."
                 sh """
                     sleep 10
-                    curl -sf http://localhost:30080/api/v1/health | \
-                      grep status.*ok
+                    RESPONSE=\$(curl -sf http://localhost:30080/api/v1/health)
+                    echo "Réponse : \$RESPONSE"
+                    echo \$RESPONSE | grep -q '"status":"ok"'
                     echo "Smoke test OK !"
                 """
             }
@@ -102,7 +103,7 @@ pipeline {
         failure {
             echo "Pipeline échoué ! Rollback en cours..."
             sh """
-                kubectl --kubeconfig=${KUBECONFIG} rollout undo \
+                kubectl --kubeconfig=\$KUBECONFIG rollout undo \
                   deployment/api-devops-demo || true
             """
         }
